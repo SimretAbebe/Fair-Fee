@@ -1,6 +1,7 @@
 {
     "provider_name": "CBE",
     "provider_full_name": "Commercial Bank of Ethiopia",
+    "provider_category": "bank",
     "date_collected": "2026-08-20",
     "source_url": "https://combanketh.et/uploads/Terms_and_Tariffs_8151c11230.pdf",
     "source_type": "official_tariff_pdf",
@@ -13,6 +14,9 @@
             "max_amount": 1000,
             "fee_amount": 0.575,
             "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false,
             "notes": "Transfer to other CBE accounts via mobile banking, after VAT"
         },
         {
@@ -22,7 +26,10 @@
             "min_amount": 1001,
             "max_amount": 5000,
             "fee_amount": 1.15,
-            "fee_type": "tiered"
+            "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_003",
@@ -31,7 +38,10 @@
             "min_amount": 5001,
             "max_amount": 10000,
             "fee_amount": 2.3,
-            "fee_type": "tiered"
+            "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_004",
@@ -40,7 +50,10 @@
             "min_amount": 10001,
             "max_amount": 50000,
             "fee_amount": 3.45,
-            "fee_type": "tiered"
+            "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_005",
@@ -49,7 +62,10 @@
             "min_amount": 50001,
             "max_amount": 100000,
             "fee_amount": 5.75,
-            "fee_type": "tiered"
+            "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_006",
@@ -58,7 +74,10 @@
             "min_amount": 100001,
             "max_amount": 200000,
             "fee_amount": 11.5,
-            "fee_type": "tiered"
+            "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_007",
@@ -67,7 +86,10 @@
             "min_amount": 200001,
             "max_amount": 300000,
             "fee_amount": 17.25,
-            "fee_type": "tiered"
+            "fee_type": "tiered",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_008",
@@ -77,7 +99,10 @@
             "max_amount": null,
             "fee_amount": 23.0,
             "fee_type": "flat_above_threshold",
-            "notes": "Fixed fee above 300,000 birr"
+            "notes": "Fixed fee above 300,000 birr",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_009",
@@ -87,7 +112,10 @@
             "max_amount": null,
             "fee_amount": 57.5,
             "fee_type": "flat_plus_variable",
-            "notes": "RTGS/ETSWITCH transfer to another bank via mobile banking. Flat 57.5 birr PLUS a variable NBE/ETSWITCH charge not disclosed in the public tariff sheet. This flat structure regardless of amount is the core regressivity example."
+            "notes": "RTGS/ETSWITCH transfer to another bank via mobile banking. Flat 57.5 birr PLUS a variable NBE/ETSWITCH charge not disclosed in the public tariff sheet. This flat structure regardless of amount is the core regressivity example.",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_010",
@@ -97,7 +125,10 @@
             "max_amount": 10000,
             "fee_amount": 11.5,
             "fee_type": "tiered",
-            "notes": "Transfer to telebirr or another wallet via mobile banking"
+            "notes": "Transfer to telebirr or another wallet via mobile banking",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_011",
@@ -106,7 +137,10 @@
             "min_amount": 10001,
             "max_amount": null,
             "fee_amount": 17.25,
-            "fee_type": "flat_above_threshold"
+            "fee_type": "flat_above_threshold",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         },
         {
             "record_id": "cbe_012",
@@ -116,7 +150,10 @@
             "max_amount": null,
             "fee_amount": 0,
             "fee_type": "free",
-            "notes": "Transfer to CBE's own wallet product is free"
+            "notes": "Transfer to CBE's own wallet product is free",
+            "valid_from": "2026-08-20",
+            "valid_to": null,
+            "valid_from_is_confirmed": false
         }
     ]
 }
