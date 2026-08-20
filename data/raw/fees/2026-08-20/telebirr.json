@@ -1,0 +1,101 @@
+{
+    "provider_name": "telebirr",
+    "provider_full_name": "telebirr (Ethio Telecom)",
+    "date_collected": "2026-08-20",
+    "source_url": "https://www.ethiotelecom.et/telebirr/telebirr-pricing/",
+    "source_type": "official_pricing_page",
+    "records": [
+        {
+            "record_id": "telebirr_001",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 1,
+            "max_amount": 100,
+            "fee_amount": 1,
+            "fee_type": "tiered",
+            "notes": "telebirr to telebirr P2P transfer"
+        },
+        {
+            "record_id": "telebirr_002",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 101,
+            "max_amount": 500,
+            "fee_amount": 2,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_003",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 501,
+            "max_amount": 1500,
+            "fee_amount": 4,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_004",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 1501,
+            "max_amount": 5000,
+            "fee_amount": 6,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_005",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 5001,
+            "max_amount": 75000,
+            "fee_amount": 8,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_006",
+            "transfer_type": "to_bank",
+            "channel": "mobile_app",
+            "min_amount": 1,
+            "max_amount": 100,
+            "fee_amount": 1,
+            "fee_type": "tiered",
+            "notes": "telebirr to bank account transfer"
+        },
+        {
+            "record_id": "telebirr_007",
+            "transfer_type": "to_bank",
+            "channel": "mobile_app",
+            "min_amount": 101,
+            "max_amount": 500,
+            "fee_amount": 3,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_008",
+            "transfer_type": "to_bank",
+            "channel": "mobile_app",
+            "min_amount": 501,
+            "max_amount": 1500,
+            "fee_amount": 6,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_009",
+            "transfer_type": "to_bank",
+            "channel": "mobile_app",
+            "min_amount": 1501,
+            "max_amount": 5000,
+            "fee_amount": 9,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "telebirr_010",
+            "transfer_type": "to_bank",
+            "channel": "mobile_app",
+            "min_amount": 5001,
+            "max_amount": 75000,
+            "fee_amount": 15,
+            "fee_type": "tiered"
+        }
+    ]
+}
