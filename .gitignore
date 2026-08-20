@@ -1,0 +1,12 @@
+.env
+*.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+fee_warehouse/target/
+fee_warehouse/dbt_packages/
+fee_warehouse/logs/
+.DS_Store
+.vscode/
+.idea/
