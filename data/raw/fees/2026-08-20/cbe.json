@@ -1,0 +1,122 @@
+{
+    "provider_name": "CBE",
+    "provider_full_name": "Commercial Bank of Ethiopia",
+    "date_collected": "2026-08-20",
+    "source_url": "https://combanketh.et/uploads/Terms_and_Tariffs_8151c11230.pdf",
+    "source_type": "official_tariff_pdf",
+    "records": [
+        {
+            "record_id": "cbe_001",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": 1000,
+            "fee_amount": 0.575,
+            "fee_type": "tiered",
+            "notes": "Transfer to other CBE accounts via mobile banking, after VAT"
+        },
+        {
+            "record_id": "cbe_002",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1001,
+            "max_amount": 5000,
+            "fee_amount": 1.15,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "cbe_003",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 5001,
+            "max_amount": 10000,
+            "fee_amount": 2.3,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "cbe_004",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 10001,
+            "max_amount": 50000,
+            "fee_amount": 3.45,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "cbe_005",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 50001,
+            "max_amount": 100000,
+            "fee_amount": 5.75,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "cbe_006",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 100001,
+            "max_amount": 200000,
+            "fee_amount": 11.5,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "cbe_007",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 200001,
+            "max_amount": 300000,
+            "fee_amount": 17.25,
+            "fee_type": "tiered"
+        },
+        {
+            "record_id": "cbe_008",
+            "transfer_type": "own_bank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 300001,
+            "max_amount": null,
+            "fee_amount": 23.0,
+            "fee_type": "flat_above_threshold",
+            "notes": "Fixed fee above 300,000 birr"
+        },
+        {
+            "record_id": "cbe_009",
+            "transfer_type": "interbank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": null,
+            "fee_amount": 57.5,
+            "fee_type": "flat_plus_variable",
+            "notes": "RTGS/ETSWITCH transfer to another bank via mobile banking. Flat 57.5 birr PLUS a variable NBE/ETSWITCH charge not disclosed in the public tariff sheet. This flat structure regardless of amount is the core regressivity example."
+        },
+        {
+            "record_id": "cbe_010",
+            "transfer_type": "to_wallet_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": 10000,
+            "fee_amount": 11.5,
+            "fee_type": "tiered",
+            "notes": "Transfer to telebirr or another wallet via mobile banking"
+        },
+        {
+            "record_id": "cbe_011",
+            "transfer_type": "to_wallet_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 10001,
+            "max_amount": null,
+            "fee_amount": 17.25,
+            "fee_type": "flat_above_threshold"
+        },
+        {
+            "record_id": "cbe_012",
+            "transfer_type": "to_cbe_birr_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": null,
+            "fee_amount": 0,
+            "fee_type": "free",
+            "notes": "Transfer to CBE's own wallet product is free"
+        }
+    ]
+}
