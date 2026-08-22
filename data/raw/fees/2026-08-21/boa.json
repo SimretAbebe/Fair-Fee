@@ -1,0 +1,61 @@
+{
+    "provider_name": "Bank of Abyssinia",
+    "provider_full_name": "Bank of Abyssinia (BoA)",
+    "provider_category": "bank",
+    "date_collected": "2026-08-21",
+    "source_url": "https://www.bankofabyssinia.com/wp-content/uploads/2024/06/BoA-Service-Charges-and-Price-F.pdf",
+    "source_type": "official_tariff_pdf",
+    "records": [
+        {
+            "record_id": "boa_001",
+            "transfer_type": "own_account_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": null,
+            "fee_amount": 0,
+            "fee_type": "free",
+            "valid_from": "2026-08-21",
+            "valid_to": null,
+            "valid_from_is_confirmed": false,
+            "notes": "Fund transfer to own account, listed under Mobile & Internet Banking Tariff"
+        },
+        {
+            "record_id": "boa_002",
+            "transfer_type": "interbank_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": null,
+            "fee_amount": 100,
+            "fee_type": "flat",
+            "valid_from": "2026-08-21",
+            "valid_to": null,
+            "valid_from_is_confirmed": false,
+            "notes": "RTGS transfer to other bank account: '50 Birr plus NBE fee (currently NBE fee is 50 Birr)'. Unlike CBE and Awash, BoA's PDF discloses the NBE fee amount explicitly, so the full flat total (100 birr) is known, not partial."
+        },
+        {
+            "record_id": "boa_003",
+            "transfer_type": "to_wallet_mobile",
+            "channel": "mobile_banking",
+            "min_amount": 1,
+            "max_amount": null,
+            "fee_amount": 0,
+            "fee_type": "free",
+            "valid_from": "2026-08-21",
+            "valid_to": null,
+            "valid_from_is_confirmed": false,
+            "notes": "'Transfer to other wallet account: Free' -- notably different from CBE and Awash, which both charge for wallet transfers"
+        }
+    ],
+    "known_gaps": [
+        {
+            "description": "Fund transfer to p2p ETSWITCH",
+            "issue": "Source states only 'As per ET-SWITCH charge' with no numeric rate disclosed anywhere on the page or PDF",
+            "action": "Not recorded. Do not fabricate a number -- follow up by checking BoA's mobile app directly, or contacting customer support, before this can be added"
+        },
+        {
+            "description": "Account to Account Transfer tiers above 10,000 birr",
+            "issue": "PDF table extraction returned the tier ranges (10,001-100,000 and above 100,001) but the corresponding charge values were missing/blank in the extracted text -- likely a table layout that didn't convert cleanly to text",
+            "action": "Only the confirmed 1-10,000 = Free tier recorded. Flagged for manual re-check directly on the PDF (open it visually rather than relying on text extraction) before Day 3 continues"
+        }
+    ]
+}
