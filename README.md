@@ -24,4 +24,6 @@ All fee data is collected from official, published sources (bank tariff PDFs, of
 pricing pages) — see `logs/collection_log.md` for full source attribution per provider.
 
 ## Setup
-_(To be added once the dbt/Postgres/API layers are built.)_
+This project can run against a local PostgreSQL install (recommended for active
+development) or via Docker Compose (`docker compose up -d`) for a fully isolated
+environment. Set your database credentials in a `.env` file (see `.env.example`).

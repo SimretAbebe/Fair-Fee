@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: fair_fee_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fairfee
+      POSTGRES_PASSWORD: fairfee_dev_password
+      POSTGRES_DB: fair_fee_warehouse
+    ports:
+      - "5433:5432"
+    volumes:
+      - fair_fee_pgdata:/var/lib/postgresql/data
+
+volumes:
+  fair_fee_pgdata:
