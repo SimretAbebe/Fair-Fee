@@ -1,0 +1,16 @@
+name: 'fee_warehouse'
+version: '1.0.0'
+config-version: 2
+
+profile: 'fee_warehouse'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+
+models:
+  fee_warehouse:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

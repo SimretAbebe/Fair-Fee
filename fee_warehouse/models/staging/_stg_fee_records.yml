@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_fee_records
+    description: "Cleaned, standardized fee records with derived fairness-input fields. One staging model for the single raw source."
+    columns:
+      - name: record_id
+        description: "Unique identifier for each fee tier record."
+        tests:
+          - not_null
+          - unique
+
+      - name: provider_name
+        description: "Standardized provider name."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['CBE', 'telebirr', 'Dashen Bank', 'Awash Bank', 'Bank of Abyssinia']
+
+      - name: transfer_type
+        description: "Type of transfer this fee applies to."
+        tests:
+          - not_null
+
+      - name: fee_type
+        description: "How the fee is structured: flat, tiered, percent_tiered, free, etc."
+        tests:
+          - not_null
+
+      - name: min_amount
+        description: "Lower bound of this fee tier, in birr."
+        tests:
+          - not_null

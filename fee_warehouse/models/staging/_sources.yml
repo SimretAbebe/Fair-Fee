@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: "Unmodified fee data exactly as loaded from provider JSON files. Never cleaned or altered here — staging models handle all cleaning."
+    tables:
+      - name: fee_records
+        description: "One row per fee tier, loaded directly from each provider's raw JSON file."
+        
