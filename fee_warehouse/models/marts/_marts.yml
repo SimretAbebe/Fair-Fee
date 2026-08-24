@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: dim_providers
+    description: "One row per unique provider (bank or telecom wallet)."
+    columns:
+      - name: provider_key
+        description: "Surrogate key for this provider."
+        tests:
+          - not_null
+          - unique
+      - name: provider_name
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_transfer_types
+    description: "One row per unique combination of transfer type and channel."
+    columns:
+      - name: transfer_type_key
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_dates
+    description: "Standard date spine, 2026-2027."
+    columns:
+      - name: date_key
+        tests:
+          - not_null
+          - unique
+      - name: full_date
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_fee_tiers
+    description: "One row per fee tier, linked to dim_providers, dim_transfer_types, and dim_dates by surrogate key."
+    columns:
+      - name: record_id
+        tests:
+          - not_null
+          - unique
+      - name: provider_key
+        description: "Foreign key to dim_providers."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_providers')
+                field: provider_key
+      - name: transfer_type_key
+        description: "Foreign key to dim_transfer_types."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_transfer_types')
+                field: transfer_type_key
+      - name: date_key
+        description: "Foreign key to dim_dates."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dates')
+                field: date_key
