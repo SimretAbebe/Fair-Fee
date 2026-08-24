@@ -65,3 +65,17 @@ models:
               arguments:
                 to: ref('dim_dates')
                 field: date_key
+
+  - name: fct_fairness_scores
+    description: "One row per fee tier, scored by how regressive (unfair to small transfers) or proportional it is."
+    columns:
+      - name: record_id
+        tests:
+          - not_null
+          - unique
+      - name: fairness_category
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['free', 'unscored (open-ended tier)', 'proportional', 'moderately regressive', 'highly regressive']
