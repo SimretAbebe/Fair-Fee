@@ -92,3 +92,12 @@ Added three fields to every fee record to support tracking fee changes over time
 - `provider_category` — added at the file level (`bank` / `telecom_wallet`) to
   keep merchant-fee providers like Chapa structurally separated from transfer-fee
   providers, even if added to the dataset later for a different purpose.
+
+
+### Fairness scoring: practical reference amount (2026-08-XX)
+Initial fairness scoring used the literal tier min_amount as the "small
+transfer" reference point. Since many tiers start at 1 birr, this produced
+meaningless percentages (e.g. 1150%) for fees that are actually reasonable
+at realistic transfer sizes. Fixed by introducing a practical_reference_low
+of 100 birr (or the tier's real minimum, if higher) as a more representative
+"small transfer" baseline.
