@@ -1,0 +1,61 @@
+{
+    "provider_name": "M-Pesa Ethiopia",
+    "provider_full_name": "M-Pesa Ethiopia (Safaricom Telecommunications Ethiopia)",
+    "provider_category": "telecom_wallet",
+    "date_collected": "2026-08-25",
+    "source_url": "https://x.com/SafaricomET/status/1877033620214268146",
+    "source_type": "official_social_media_post",
+    "confidence_note": "Data quality is lower here than other providers. Only one number (to_bank transfer cap) is confirmed via an official Safaricom Ethiopia channel. All other figures (P2P wallet tiers, cash-out) come from a third-party fee-comparison site, not Safaricom directly, and are marked accordingly.",
+    "records": [
+        {
+            "record_id": "mpesa_et_001",
+            "transfer_type": "to_bank",
+            "channel": "mobile_app",
+            "min_amount": 1,
+            "max_amount": 75000,
+            "fee_amount": 5,
+            "fee_type": "flat_capped",
+            "valid_from": "2026-08-25",
+            "valid_to": null,
+            "valid_from_is_confirmed": true,
+            "confidence": "official",
+            "notes": "Confirmed via official Safaricom Ethiopia X/Twitter post: transfer up to 75,000 birr to any bank costs a maximum of 5 birr. No official tiered breakdown found -- treated as a single flat-capped fee across the full range."
+        },
+        {
+            "record_id": "mpesa_et_002",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 1,
+            "max_amount": 50,
+            "fee_amount": 0,
+            "fee_type": "free",
+            "valid_from": "2026-08-25",
+            "valid_to": null,
+            "valid_from_is_confirmed": false,
+            "confidence": "unverified_third_party",
+            "notes": "SOURCE NOT OFFICIAL. From a third-party fee-comparison site (momocalc.com), not Safaricom's own site or app. Recorded for completeness but flagged as needing verification directly against the M-Pesa Ethiopia app before being treated as reliable."
+        },
+        {
+            "record_id": "mpesa_et_003",
+            "transfer_type": "p2p_wallet",
+            "channel": "mobile_app",
+            "min_amount": 51,
+            "max_amount": 5000,
+            "fee_amount": null,
+            "fee_percent": 0.1,
+            "fee_type": "percent_tiered",
+            "valid_from": "2026-08-25",
+            "valid_to": null,
+            "valid_from_is_confirmed": false,
+            "confidence": "unverified_third_party",
+            "notes": "SOURCE NOT OFFICIAL -- same third-party site as mpesa_et_002. Not yet verified against Safaricom's own materials."
+        }
+    ],
+    "known_gaps": [
+        {
+            "description": "Full P2P wallet tariff above 5,000 birr, and full cash-out tariff table",
+            "issue": "Safaricom Ethiopia's own site does not publish a numeric fee table publicly (terms & conditions page only says fees are 'published on the website and/or agent outlets' without giving the table). Only a third-party aggregator site provides these figures, unverified.",
+            "action": "Follow up by checking the M-Pesa Ethiopia app directly (fee schedules are often shown in-app before confirming a transaction) or visiting a physical agent outlet, per the official T&Cs, before treating the tiered figures as reliable."
+        }
+    ]
+}
