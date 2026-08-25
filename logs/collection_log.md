@@ -80,7 +80,18 @@ tiered birr amount, `fee_percent: null`) or `fee_percent` (percentage of transfe
 amount, `fee_amount: null`) depending on `fee_type`.
 
 ### Providers still pending
-- M-Pesa Ethiopia, HelloCash (Day 3)
+- M-Pesa Ethiopia: added (Day 7) — see confidence caveats in the raw file itself
+- HelloCash: searched official channels (BelCash, hellocash.money, hellocash.at) and
+  found no publicly disclosed numeric fee schedule anywhere — only marketing pages
+  and app screenshots. Not recorded. Would require either signing up for the app
+  directly to see in-app fee disclosures, or contacting HelloCash/BelCash support
+  directly. Logged as a known gap rather than guessed at.
+
+### Scope decision: Chapa excluded
+Chapa charges merchants 3.5% per transaction to *accept* payments — it's a merchant
+payment-processing fee, not a person-to-person transfer fee like the rest of this
+dataset. Comparing it against CBE/telebirr transfer fees would mix two different
+kinds of fees and make the fairness score meaningless. Excluded from scope.
 
 ### Schema update: added freshness tracking (2026-08-20)
 Added three fields to every fee record to support tracking fee changes over time:
@@ -93,11 +104,5 @@ Added three fields to every fee record to support tracking fee changes over time
   keep merchant-fee providers like Chapa structurally separated from transfer-fee
   providers, even if added to the dataset later for a different purpose.
 
-
-### Fairness scoring: practical reference amount (2026-08-XX)
-Initial fairness scoring used the literal tier min_amount as the "small
-transfer" reference point. Since many tiers start at 1 birr, this produced
-meaningless percentages (e.g. 1150%) for fees that are actually reasonable
-at realistic transfer sizes. Fixed by introducing a practical_reference_low
-of 100 birr (or the tier's real minimum, if higher) as a more representative
-"small transfer" baseline.
+**Re-verification cadence:** monthly. Re-fetch each source, diff against the last
+snapshot, log "no change" or close out changed records with `valid_to` set.
