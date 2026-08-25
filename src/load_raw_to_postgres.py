@@ -6,6 +6,7 @@ What this does, in plain terms:
 2. Flattens each fee record (adding provider-level info like provider_name and
    provider_category onto every row)
 3. Writes everything into one raw table: raw.fee_records
+
 """
 
 import json
@@ -16,7 +17,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
-load_dotenv()  
+load_dotenv()  # reads variables from a local .env file, which is gitignored
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
@@ -117,6 +118,15 @@ def main():
 
     cur.execute(CREATE_SCHEMA_AND_TABLE_SQL)
     conn.commit()
+
+    # Clear existing data before reloading. Without this, re-running this
+    # script (e.g. after adding a new provider) would duplicate every
+    # previously-loaded record instead of refreshing them -- this script
+    # is meant to always reflect exactly what's currently in the JSON
+    # files, not accumulate copies on every run.
+    cur.execute("TRUNCATE TABLE raw.fee_records;")
+    conn.commit()
+    print("Cleared existing raw.fee_records before reload.")
 
     total_rows = 0
     for filepath in files:

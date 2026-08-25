@@ -1,3 +1,5 @@
+-- stg_fee_records.sql
+
 with source as (
 
     select * from {{ source('raw', 'fee_records') }}
@@ -23,6 +25,8 @@ standardized as (
                 then 'Awash Bank'
             when trim(lower(provider_name)) in ('boa', 'bank of abyssinia')
                 then 'Bank of Abyssinia'
+            when trim(lower(provider_name)) in ('m-pesa ethiopia', 'mpesa ethiopia', 'm-pesa', 'mpesa')
+                then 'M-Pesa Ethiopia'
             else initcap(trim(provider_name))
         end as provider_name,
 

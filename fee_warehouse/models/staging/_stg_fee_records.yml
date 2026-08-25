@@ -16,7 +16,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['CBE', 'telebirr', 'Dashen Bank', 'Awash Bank', 'Bank of Abyssinia']
+                values: ['CBE', 'telebirr', 'Dashen Bank', 'Awash Bank', 'Bank of Abyssinia', 'M-Pesa Ethiopia']
 
       - name: transfer_type
         description: "Type of transfer this fee applies to."
