@@ -1,29 +1,60 @@
-# Fair Fee Ethiopia Transfer Fee Transparency Platform
+# Fair Fee
 
-## Problem
-Mobile banking and mobile money transfer fees in Ethiopia are often flat or coarsely
-tiered rather than proportional — meaning small transfers can pay a fee that's a large
-percentage of the amount, while large transfers pay proportionally far less. Customers
-also have no easy way to compare fees across providers before sending money.
+Compare Ethiopian mobile banking transfer fees across providers, and see
+which ones are proportional vs. regressive to small transfers.
 
-## What this project does
-Collects, structures, and analyzes real transfer fee data from Ethiopian banks and
-mobile money providers to:
-1. Let a customer compare what they'd pay across providers for a given transfer
-2. Score how "fair" (proportional) each fee structure is relative to transaction size
+## Example — sending 2,000 birr interbank
 
-## Status
-In progress — Day 1 of build. See `logs/collection_log.md` for data collection progress.
+| Provider | Fee | % of transfer | Fairness |
+|---|---|---|---|
+| Awash Bank | 4 birr | 0.2% | proportional |
+| Dashen Bank | 8 birr | 0.4% | proportional |
+| CBE | 57.5 birr | 2.88% | highly regressive |
+| Bank of Abyssinia | 100 birr | 5.0% | highly regressive |
+
+Same transfer, 25x price difference — and the fairness score explains why,
+not just what it costs.
+
+## Stack
+
+Python · PostgreSQL · dbt · FastAPI · SQLAlchemy · Docker · GitHub Actions CI
 
 ## Architecture
-Raw collection → Data Lake (`data/raw/`) → PostgreSQL → dbt (staging → marts) → fairness scoring → FastAPI → dashboard
 
+```
+Official sources → raw JSON → Postgres → dbt staging → star schema
+→ fairness scoring → FastAPI
+```
 
-## Data Sources
-All fee data is collected from official, published sources (bank tariff PDFs, official
-pricing pages) — see `logs/collection_log.md` for full source attribution per provider.
+Full methodology and known data gaps: [`docs/methodology.md`](docs/methodology.md)
 
 ## Setup
-This project can run against a local PostgreSQL install (recommended for active
-development) or via Docker Compose (`docker compose up -d`) for a fully isolated
-environment. Set your database credentials in a `.env` file (see `.env.example`).
+
+```bash
+# 1. Create a Postgres database, set credentials in .env (see .env.example)
+# 2. Copy fee_warehouse/profiles.yml.example to ~/.dbt/profiles.yml
+
+pip install -r requirements.txt
+python src/load_raw_to_postgres.py
+
+cd fee_warehouse
+dbt run && dbt test
+
+cd ..
+uvicorn api.main:app --reload
+```
+Docs at `http://localhost:8000/docs`.
+
+## Endpoints
+
+- `GET /api/fees/compare?amount=2000&transfer_type=interbank_mobile`
+- `GET /api/fees/cheapest?amount=2000&transfer_type=interbank_mobile`
+- `GET /api/providers/cbe/fairness`
+
+Transfer types: `own_bank_mobile`, `interbank_mobile`, `to_wallet_mobile`,
+`p2p_wallet`, `to_bank`, `own_account_mobile`
+
+## Data sources
+
+CBE, telebirr, Dashen, Awash, and Bank of Abyssinia — official tariff
+pages/PDFs. M-Pesa Ethiopia — mixed confidence, flagged in the data.
