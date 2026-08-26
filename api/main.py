@@ -1,22 +1,3 @@
-"""
-main.py
-
-The FastAPI application. Currently exposes one endpoint:
-
-  GET /api/fees/compare?amount=2000&transfer_type=interbank_mobile
-
-Given an amount and transfer type, finds the matching fee tier for every
-provider that offers that transfer type, computes the ACTUAL fee for
-that specific amount (not just the tier's stored boundary numbers), and
-returns them sorted cheapest first.
-
-Why we compute the fee at request time instead of just returning
-fct_fairness_scores directly: that table stores fee RULES per tier
-(e.g. "0.40% for 1-5000 birr"), not a fee for one specific amount. A
-customer wants to know "what do I pay for MY 2000 birr transfer" -- so
-the API is where a general rule becomes one concrete number.
-"""
-
 from fastapi import FastAPI, HTTPException, Query
 
 from api.database import run_query
@@ -24,7 +5,11 @@ from api.schemas import FeeComparisonResponse, FeeComparisonResult
 
 app = FastAPI(
     title="Fair Fee API",
-    description="Compare Ethiopian mobile banking transfer fees across providers.",
+    description=(
+        "Compare Ethiopian mobile banking and mobile money transfer fees "
+        "across providers, and see how proportional or regressive each "
+        "fee structure is relative to the transfer amount."
+    ),
     version="0.1.0",
 )
 
@@ -51,11 +36,22 @@ def root():
     return {"message": "Fair Fee API is running. See /docs for available endpoints."}
 
 
-@app.get("/api/fees/compare", response_model=FeeComparisonResponse)
+@app.get(
+    "/api/fees/compare",
+    response_model=FeeComparisonResponse,
+    tags=["Fees"],
+    summary="Compare fees across all providers for a given transfer",
+)
 def compare_fees(
     amount: float = Query(..., gt=0, description="Transfer amount in birr, must be positive"),
     transfer_type: str = Query(..., description="e.g. interbank_mobile, own_bank_mobile, to_wallet_mobile, p2p_wallet, to_bank"),
 ):
+    """
+    Returns every provider's fee for the given amount and transfer type,
+    sorted cheapest first, along with a fairness category for each --
+    whether the fee is free, negligible, proportional to the transfer
+    size, or regressive (disproportionately costly for smaller amounts).
+    """
     rows = run_query(FEE_TIER_QUERY, {"amount": amount, "transfer_type": transfer_type})
 
     if not rows:
@@ -115,7 +111,12 @@ def compare_fees(
     )
 
 
-@app.get("/api/fees/cheapest", response_model=FeeComparisonResult)
+@app.get(
+    "/api/fees/cheapest",
+    response_model=FeeComparisonResult,
+    tags=["Fees"],
+    summary="Get only the single cheapest provider for a given transfer",
+)
 def cheapest_fee(
     amount: float = Query(..., gt=0, description="Transfer amount in birr, must be positive"),
     transfer_type: str = Query(..., description="e.g. interbank_mobile, own_bank_mobile, to_wallet_mobile, p2p_wallet, to_bank"),
@@ -149,7 +150,11 @@ PROVIDER_TIERS_QUERY = """
 """
 
 
-@app.get("/api/providers/{provider_name}/fairness")
+@app.get(
+    "/api/providers/{provider_name}/fairness",
+    tags=["Providers"],
+    summary="Get a provider's full published fee structure",
+)
 def provider_fairness_report(provider_name: str):
     """
     Returns every fee tier for a single provider, exactly as stored --
