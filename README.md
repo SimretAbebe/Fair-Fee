@@ -17,7 +17,7 @@ not just what it costs.
 
 ## API in action
 
-![Fair Fee API docs](docs/screenshots/projectimg1.png)
+![Fair Fee API docs](docs/screenshots/projectimg1.PNG)
 
 ## Stack
 
