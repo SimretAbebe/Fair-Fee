@@ -15,6 +15,10 @@ which ones are proportional vs. regressive to small transfers.
 Same transfer, 25x price difference — and the fairness score explains why,
 not just what it costs.
 
+## API in action
+
+![Fair Fee API docs](docs/screenshots/projectimg1.png)
+
 ## Stack
 
 Python · PostgreSQL · dbt · FastAPI · SQLAlchemy · Docker · GitHub Actions CI
