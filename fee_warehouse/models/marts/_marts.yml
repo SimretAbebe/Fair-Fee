@@ -78,4 +78,4 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['free', 'unscored (open-ended tier)', 'proportional', 'moderately regressive', 'highly regressive']
+                values: ['free', 'unscored (insufficient data)', 'proportional', 'moderately regressive', 'highly regressive', 'highly regressive (uncapped flat fee)']
