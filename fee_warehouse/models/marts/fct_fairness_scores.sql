@@ -1,3 +1,17 @@
+-- fct_fairness_scores.sql
+--
+-- For every fee tier, computes how much more (proportionally) a customer
+-- sending a REALISTIC small amount pays compared to a customer at the top
+-- of the tier -- the "regressivity gap."
+--
+-- Important design decision: we do NOT use the tier's literal min_amount as
+-- the "small transfer" reference point. Many tiers start at 1 birr, and
+-- dividing a flat fee by 1 birr produces meaningless numbers (e.g. an 11.5
+-- birr fee against a 1 birr transfer = 1150%) that nobody actually
+-- experiences, since nobody sends exactly 1 birr. Instead, we use a
+-- "practical reference amount" of 100 birr as a realistic small transfer --
+-- if the tier's actual minimum is already above 100, we use that instead.
+
 with fee_tiers as (
 
     select * from {{ ref('fct_fee_tiers') }}
@@ -56,6 +70,7 @@ scored as (
         wp.fee_percent,
         wp.fee_type,
         wp.notes,
+        wp.destination_wallet,
         wp.practical_reference_low,
         wp.practical_percent_at_low,
         wp.implied_percent_at_max,

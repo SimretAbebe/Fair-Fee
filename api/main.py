@@ -10,6 +10,11 @@ provider that offers that transfer type, computes the ACTUAL fee for
 that specific amount (not just the tier's stored boundary numbers), and
 returns them sorted cheapest first.
 
+Why we compute the fee at request time instead of just returning
+fct_fairness_scores directly: that table stores fee RULES per tier
+(e.g. "0.40% for 1-5000 birr"), not a fee for one specific amount. A
+customer wants to know "what do I pay for MY 2000 birr transfer" -- so
+the API is where a general rule becomes one concrete number.
 """
 
 from fastapi import FastAPI, HTTPException, Query
@@ -28,6 +33,7 @@ FEE_TIER_QUERY = """
         provider_name,
         transfer_type,
         channel,
+        destination_wallet,
         fee_type,
         fee_amount,
         fee_percent,
@@ -89,6 +95,7 @@ def compare_fees(
                 provider_name=row["provider_name"],
                 transfer_type=row["transfer_type"],
                 channel=row["channel"],
+                destination_wallet=row["destination_wallet"],
                 fee_type=row["fee_type"],
                 computed_fee=computed_fee,
                 fee_as_percent_of_amount=fee_as_percent,
@@ -106,3 +113,60 @@ def compare_fees(
         results=results,
         cheapest_provider=cheapest,
     )
+
+
+@app.get("/api/fees/cheapest", response_model=FeeComparisonResult)
+def cheapest_fee(
+    amount: float = Query(..., gt=0, description="Transfer amount in birr, must be positive"),
+    transfer_type: str = Query(..., description="e.g. interbank_mobile, own_bank_mobile, to_wallet_mobile, p2p_wallet, to_bank"),
+):
+    """
+    A convenience endpoint for when a client just wants THE answer --
+    "what's my cheapest option" -- without parsing a full comparison list.
+    Reuses the exact same logic as /compare rather than duplicating it,
+    since both endpoints must always agree on what "cheapest" means.
+    """
+    full_response = compare_fees(amount=amount, transfer_type=transfer_type)
+    return full_response.results[0]
+
+
+PROVIDER_TIERS_QUERY = """
+    SELECT
+        provider_name,
+        transfer_type,
+        channel,
+        destination_wallet,
+        min_amount,
+        max_amount,
+        fee_amount,
+        fee_percent,
+        fee_type,
+        fairness_category,
+        notes
+    FROM staging_dev.fct_fairness_scores
+    WHERE lower(provider_name) = lower(:provider_name)
+    ORDER BY transfer_type, min_amount
+"""
+
+
+@app.get("/api/providers/{provider_name}/fairness")
+def provider_fairness_report(provider_name: str):
+    """
+    Returns every fee tier for a single provider, exactly as stored --
+    unlike /compare, this doesn't need a specific amount, since it's
+    showing the provider's full published fee structure, not a
+    computed answer for one transaction.
+    """
+    rows = run_query(PROVIDER_TIERS_QUERY, {"provider_name": provider_name})
+
+    if not rows:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No provider found matching '{provider_name}'",
+        )
+
+    return {
+        "provider_name": rows[0]["provider_name"],
+        "total_fee_tiers": len(rows),
+        "fee_tiers": rows,
+    }
