@@ -1,4 +1,18 @@
+"""
+main.py
+
+The FastAPI application. Currently exposes one endpoint:
+
+  GET /api/fees/compare?amount=2000&transfer_type=interbank_mobile
+
+Given an amount and transfer type, finds the matching fee tier for every
+provider that offers that transfer type, computes the ACTUAL fee for
+that specific amount (not just the tier's stored boundary numbers), and
+returns them sorted cheapest first.
+"""
+
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.database import run_query
 from api.schemas import FeeComparisonResponse, FeeComparisonResult
@@ -11,6 +25,17 @@ app = FastAPI(
         "fee structure is relative to the transfer amount."
     ),
     version="0.1.0",
+)
+
+# Allows a frontend running on a different address (e.g. a dev server on
+# localhost:5173 or localhost:3000) to actually call this API. Without
+# this, the browser blocks the request even though the API itself is
+# working fine -- this isn't a bug, it's a deliberate browser safety rule.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # for local development only -- restrict this before any real deployment
+    allow_methods=["GET"],
+    allow_headers=["*"],
 )
 
 FEE_TIER_QUERY = """
@@ -52,12 +77,12 @@ def compare_fees(
     whether the fee is free, negligible, proportional to the transfer
     size, or regressive (disproportionately costly for smaller amounts).
     """
-    rows = run_query(FEE_TIER_QUERY, {"amount": amount, "transfer_type": transfer_type})
+    rows = run_query(FEE_TIER_QUERY, {"amount": amount, "transfer_type": transfer_type.strip()})
 
     if not rows:
         raise HTTPException(
             status_code=404,
-            detail=f"No providers found offering transfer_type='{transfer_type}' for amount={amount}",
+            detail=f"No providers found offering transfer_type='{transfer_type.strip()}' for amount={amount}",
         )
 
     results = []
