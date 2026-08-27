@@ -170,7 +170,7 @@ PROVIDER_TIERS_QUERY = """
         fairness_category,
         notes
     FROM staging_dev.fct_fairness_scores
-    WHERE lower(provider_name) = lower(:provider_name)
+    WHERE provider_name ILIKE '%' || :provider_name || '%'
     ORDER BY transfer_type, min_amount
 """
 
