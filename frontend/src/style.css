@@ -104,6 +104,13 @@ body {
   color: inherit;
 }
 
+.brand-logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .brand-logo {
   width: 32px;
   height: 32px;
@@ -1061,6 +1068,11 @@ body {
   color: var(--text-muted);
 }
 
+.empty-state-logo {
+  display: block;
+  margin-bottom: 16px;
+}
+
 .empty-state-title {
   font-size: 1.0625rem;
   font-weight: 700;
@@ -1085,6 +1097,18 @@ body {
   color: var(--text-muted);
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.footer-brand-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .footer-links {
