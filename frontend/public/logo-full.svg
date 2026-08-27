@@ -1,0 +1,12 @@
+<svg width="280" height="90" viewBox="0 0 280 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fair Fee logo">
+  <g transform="translate(45,45)">
+    <circle cx="0" cy="0" r="38" fill="none" stroke="#5A8F3C" stroke-width="4.5" stroke-dasharray="19 78" transform="rotate(-90)"/>
+    <circle cx="0" cy="0" r="38" fill="none" stroke="#E0A526" stroke-width="4.5" stroke-dasharray="19 78" stroke-dashoffset="-32" transform="rotate(-90)"/>
+    <circle cx="0" cy="0" r="38" fill="none" stroke="#C8372D" stroke-width="4.5" stroke-dasharray="19 78" stroke-dashoffset="-64" transform="rotate(-90)"/>
+    <circle cx="0" cy="0" r="27" fill="#2563EB"/>
+    <path d="M-15 -6 L11 -6 L4 -13" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 6 L-11 6 L-4 13" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="98" y="40" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#111827">Fair Fee</text>
+  <text x="98" y="60" font-family="Arial, sans-serif" font-size="13" font-weight="400" fill="#6B7280">Ethiopia transfer fee transparency</text>
+</svg>
