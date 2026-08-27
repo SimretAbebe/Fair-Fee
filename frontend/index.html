@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Compare real, published Ethiopian mobile banking and mobile money transfer fees across CBE, Awash, Dashen, Telebirr, M-Pesa, and more." />
+  <title>Fair Fee — Ethiopian Bank & Mobile Money Transfer Fee Analyzer</title>
+
+  <!-- Google Fonts: Clean modern sans-serif Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <a href="#" class="brand" id="brand-link">
+          <div class="brand-logo">FF</div>
+          <div class="brand-name">
+            Fair Fee
+            <span class="brand-tag">Ethiopia</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+          <!-- View Switcher -->
+          <nav class="view-tabs" role="tablist" aria-label="Main navigation">
+            <button class="tab-btn active" id="tab-compare" role="tab" aria-selected="true">
+              Compare fees
+            </button>
+            <button class="tab-btn" id="tab-directory" role="tab" aria-selected="false">
+              Provider directory
+            </button>
+          </nav>
+
+          <!-- API Status -->
+          <div class="api-status" id="api-status-badge" title="API Status at http://localhost:8000">
+            <span class="status-dot online" id="status-dot"></span>
+            <span id="status-text">API online</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+      <!-- VIEW 1: COMPARISON VIEW -->
+      <section id="view-compare" class="view-section">
+        <!-- Hero Section -->
+        <div class="hero">
+          <div class="hero-tagline">Fee transparency analyzer</div>
+          <h1 class="hero-title">How much will this transfer really cost you?</h1>
+          <p class="hero-subtitle">
+            Compare real, published transfer fees across Ethiopian banks and mobile wallets, and see which ones are actually fair.
+          </p>
+        </div>
+
+        <!-- Quick Presets -->
+        <div class="presets-section">
+          <div class="presets-label">Common scenarios</div>
+          <div class="presets-grid" id="presets-container">
+            <!-- Injected by TypeScript -->
+          </div>
+        </div>
+
+        <!-- Input Form Section -->
+        <div class="form-card">
+          <form id="compare-form">
+            <div class="form-grid">
+              <!-- Amount Input -->
+              <div class="form-group">
+                <label for="amount-input" class="form-label">
+                  Transfer amount
+                  <span class="form-label-hint">Ethiopian Birr</span>
+                </label>
+                <div class="input-wrapper">
+                  <input
+                    type="number"
+                    id="amount-input"
+                    class="form-input has-suffix"
+                    placeholder="2,000"
+                    min="1"
+                    step="any"
+                    required
+                    autocomplete="off"
+                  />
+                  <span class="input-suffix">ETB</span>
+                </div>
+              </div>
+
+              <!-- Transfer Type Dropdown -->
+              <div class="form-group">
+                <label for="transfer-type-select" class="form-label">
+                  Transfer type
+                  <span class="form-label-hint">Route</span>
+                </label>
+                <select id="transfer-type-select" class="form-select" required>
+                  <option value="interbank_mobile" selected>Interbank transfer (different bank)</option>
+                  <option value="own_bank_mobile">Same bank transfer (mobile banking)</option>
+                  <option value="to_wallet_mobile">Bank to mobile wallet (Telebirr, M-Pesa)</option>
+                  <option value="p2p_wallet">Wallet to wallet (P2P)</option>
+                  <option value="to_bank">Mobile wallet to bank account</option>
+                  <option value="own_account_mobile">Own account transfer (mobile banking)</option>
+                </select>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-group">
+                <button type="submit" id="submit-btn" class="btn-primary">
+                  <span id="btn-text">Compare fees</span>
+                  <div class="spinner hidden" id="btn-spinner" style="display: none;"></div>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Alert / Error Banner -->
+        <div id="alert-banner" class="alert-card error hidden" style="display: none;">
+          <div class="alert-icon" id="alert-icon">⚠️</div>
+          <div class="alert-content">
+            <div class="alert-title" id="alert-title">Notice</div>
+            <div class="alert-desc" id="alert-desc">An error occurred while loading data.</div>
+          </div>
+        </div>
+
+        <!-- Results Area -->
+        <div id="results-wrapper" class="results-section hidden" style="display: none;">
+          <!-- Cheapest Spotlight Callout -->
+          <div class="spotlight-card" id="spotlight-card">
+            <!-- Injected by TypeScript -->
+          </div>
+
+          <!-- Comparison Table Card -->
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div class="table-title">
+                <span>All provider rates</span>
+                <span class="count-pill" id="result-count-pill">0 providers</span>
+              </div>
+              <div class="table-controls">
+                <label for="sort-select" style="font-size: 0.8125rem; color: var(--text-muted);">Sort by:</label>
+                <select id="sort-select" class="sort-select">
+                  <option value="fee-asc">Cheapest fee (low to high)</option>
+                  <option value="fee-desc">Highest fee (high to low)</option>
+                  <option value="percent-asc">Lowest % of amount</option>
+                  <option value="name-asc">Provider name (A to Z)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="comparison-table-wrapper">
+              <table class="comparison-table" id="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Provider</th>
+                    <th>Computed fee</th>
+                    <th>Fee % of amount</th>
+                    <th>Fairness rating</th>
+                    <th>Tariff notes</th>
+                  </tr>
+                </thead>
+                <tbody id="comparison-tbody">
+                  <!-- Injected by TypeScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Initial Placeholder State -->
+        <div id="initial-state" class="empty-state">
+          <div class="empty-state-title">Ready to compare real transfer fees</div>
+          <div class="empty-state-desc">
+            Choose a common scenario above or enter any amount in Ethiopian Birr to see exact fees, percentage slices, and fairness ratings across all providers.
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: PROVIDER DIRECTORY VIEW -->
+      <section id="view-directory" class="view-section hidden" style="display: none;">
+        <div class="provider-explorer">
+          <div class="explorer-header-card">
+            <div class="hero-tagline">Fee schedules</div>
+            <h2 class="hero-title" style="font-size: 2rem; margin-bottom: 8px;">
+              Provider fee structure directory
+            </h2>
+            <p class="hero-subtitle" style="margin: 0; font-size: 1rem;">
+              Inspect every published fee tier, percentage rule, flat tariff, and notes for any Ethiopian bank or mobile money provider.
+            </p>
+
+            <div class="provider-chips" id="provider-chips">
+              <!-- Injected by TypeScript -->
+            </div>
+
+            <div class="custom-provider-row">
+              <input
+                type="text"
+                id="custom-provider-input"
+                class="form-input"
+                placeholder="Search or enter provider name (e.g. CBE, Awash Bank, Telebirr...)"
+                style="max-width: 440px;"
+              />
+              <button id="search-provider-btn" class="btn-primary" style="height: 46px; padding: 0 20px;">
+                Look up tiers
+              </button>
+            </div>
+          </div>
+
+          <!-- Directory Error Banner -->
+          <div id="directory-alert-banner" class="alert-card error hidden" style="display: none;">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+              <div class="alert-title" id="directory-alert-title">Provider not found</div>
+              <div class="alert-desc" id="directory-alert-desc">Unable to retrieve fee tiers.</div>
+            </div>
+          </div>
+
+          <!-- Directory Results Container -->
+          <div id="directory-results" class="hidden" style="display: none;">
+            <div class="directory-summary-bar">
+              <div class="table-title">
+                <span id="directory-provider-name">CBE</span>
+                <span class="count-pill" id="directory-group-count">0 transfer types</span>
+                <span class="count-pill" id="directory-tier-count">0 total tiers</span>
+              </div>
+              <div class="directory-toggle-actions">
+                <button type="button" id="expand-all-btn" class="text-action-btn">Expand all</button>
+                <button type="button" id="collapse-all-btn" class="text-action-btn">Collapse all</button>
+              </div>
+            </div>
+
+            <!-- Grouped Collapsible Accordions -->
+            <div id="directory-groups-container" class="directory-groups-container">
+              <!-- Injected by TypeScript -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>
+        <strong>Fair Fee</strong> — Transparent fee monitoring for Ethiopian mobile banking & mobile money.
+      </div>
+      <div class="footer-links">
+        <a href="http://localhost:8000/docs" target="_blank" rel="noreferrer" class="footer-link">API docs</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
