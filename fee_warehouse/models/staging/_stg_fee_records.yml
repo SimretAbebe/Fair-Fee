@@ -32,3 +32,17 @@ models:
         description: "Lower bound of this fee tier, in birr."
         tests:
           - not_null
+
+  - name: stg_complaints
+    description: "Cleaned complaint records with standardized provider names."
+    columns:
+      - name: complaint_id
+        tests:
+          - not_null
+          - unique
+      - name: provider_name
+        tests:
+          - not_null
+      - name: category
+        tests:
+          - not_null

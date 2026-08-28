@@ -79,3 +79,11 @@ models:
           - accepted_values:
               arguments:
                 values: ['free', 'unscored (insufficient data)', 'proportional', 'moderately regressive', 'highly regressive', 'highly regressive (uncapped flat fee)']
+
+  - name: fct_complaint_sentiment
+    description: "One row per provider, joining complaint counts against fairness score summary. Small sample -- see docs/methodology.md."
+    columns:
+      - name: provider_name
+        tests:
+          - not_null
+          - unique
