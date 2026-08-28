@@ -28,6 +28,7 @@ DB_CONFIG = {
 }
 
 RAW_DATA_DIR = Path("data/raw/fees")
+RAW_COMPLAINTS_DIR = Path("data/raw/complaints")
 
 CREATE_SCHEMA_AND_TABLE_SQL = """
 CREATE SCHEMA IF NOT EXISTS raw;
@@ -63,10 +64,38 @@ INSERT INTO raw.fee_records (
 ) VALUES %s
 """
 
+CREATE_COMPLAINTS_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS raw.complaints (
+    complaint_id TEXT,
+    provider_name TEXT,
+    source_type TEXT,
+    source_url TEXT,
+    date_observed DATE,
+    summary TEXT,
+    short_quote TEXT,
+    category TEXT,
+    secondary_category TEXT,
+    date_collected DATE,
+    loaded_at TIMESTAMP DEFAULT NOW()
+);
+"""
+
+INSERT_COMPLAINTS_SQL = """
+INSERT INTO raw.complaints (
+    complaint_id, provider_name, source_type, source_url, date_observed,
+    summary, short_quote, category, secondary_category, date_collected
+) VALUES %s
+"""
+
 
 def find_all_provider_files():
     """Find every provider JSON file across every dated folder."""
     return sorted(RAW_DATA_DIR.glob("*/*.json"))
+
+
+def find_all_complaint_files():
+    """Find every complaint JSON file across every dated folder."""
+    return sorted(RAW_COMPLAINTS_DIR.glob("*/*.json"))
 
 
 def flatten_provider_file(filepath):
@@ -107,6 +136,34 @@ def flatten_provider_file(filepath):
     return rows
 
 
+def flatten_complaint_file(filepath):
+    """
+    Same idea as flatten_provider_file, but for complaint records instead
+    of fee records -- each complaint file's date_collected gets attached
+    to every complaint row it contains.
+    """
+    with open(filepath) as f:
+        data = json.load(f)
+
+    date_collected = data.get("date_collected")
+
+    rows = []
+    for record in data.get("records", []):
+        rows.append((
+            record.get("complaint_id"),
+            record.get("provider_name"),
+            record.get("source_type"),
+            record.get("source_url"),
+            record.get("date_observed"),
+            record.get("summary"),
+            record.get("short_quote"),
+            record.get("category"),
+            record.get("secondary_category"),
+            date_collected,
+        ))
+    return rows
+
+
 def main():
     files = find_all_provider_files()
     print(f"Found {len(files)} provider files to load:")
@@ -138,6 +195,30 @@ def main():
             print(f"Loaded {len(rows)} records from {filepath.name}")
 
     print(f"\nDone. Total records loaded into raw.fee_records: {total_rows}")
+
+    # Complaints -- same idempotent pattern: create table, clear, reload
+    complaint_files = find_all_complaint_files()
+    print(f"\nFound {len(complaint_files)} complaint files to load:")
+    for f in complaint_files:
+        print(f"  - {f}")
+
+    cur.execute(CREATE_COMPLAINTS_TABLE_SQL)
+    conn.commit()
+
+    cur.execute("TRUNCATE TABLE raw.complaints;")
+    conn.commit()
+    print("Cleared existing raw.complaints before reload.")
+
+    total_complaints = 0
+    for filepath in complaint_files:
+        rows = flatten_complaint_file(filepath)
+        if rows:
+            execute_values(cur, INSERT_COMPLAINTS_SQL, rows)
+            conn.commit()
+            total_complaints += len(rows)
+            print(f"Loaded {len(rows)} complaints from {filepath.name}")
+
+    print(f"\nDone. Total records loaded into raw.complaints: {total_complaints}")
 
     cur.close()
     conn.close()

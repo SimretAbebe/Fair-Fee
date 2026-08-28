@@ -1,0 +1,41 @@
+{
+    "date_collected": "2026-08-26",
+    "collection_method": "web search of public app store reviews (Google Play, Apple App Store)",
+    "note": "Complaint text is paraphrased in our own words to respect copyright. Any direct quote is under 15 words, one quote maximum per source.",
+    "records": [
+        {
+            "complaint_id": "complaint_001",
+            "provider_name": "CBE",
+            "source_type": "app_store_review",
+            "source_url": "https://apps.apple.com/us/app/cbe-mobile-banking/id1534203410",
+            "date_observed": "2026-08-26",
+            "summary": "A reviewer reported being charged 20 birr by branch staff to reset/reactivate the mobile app, received no receipt, and felt the charge was unfair and undisclosed.",
+            "short_quote": "That is not fair to charge us.",
+            "category": "fee_complaint",
+            "secondary_category": "transparency_complaint"
+        },
+        {
+            "complaint_id": "complaint_002",
+            "provider_name": "telebirr",
+            "source_type": "app_store_review",
+            "source_url": "https://play.google.com/store/apps/details?id=cn.tydic.ethiopay",
+            "date_observed": "2026-08-26",
+            "summary": "A reviewer with over a year of telebirr usage said the app is generally useful but described the fee for transferring money from a bank account into telebirr as excessive.",
+            "short_quote": "incurred exaggerate fee while transferring from bank",
+            "category": "fee_complaint",
+            "secondary_category": null
+        }
+    ],
+    "known_gaps": [
+        {
+            "description": "No fee-specific complaints found for Dashen Bank, Awash Bank, or Bank of Abyssinia",
+            "issue": "Searched official app store review pages for all three providers. Reviews found were substantial in volume but almost entirely about app reliability (crashes, login lockouts, balance sync failures, account reactivation issues) rather than fees specifically.",
+            "action": "This may reflect genuinely fewer fee complaints for these providers, OR it may reflect that fee complaints exist but aren't surfaced in the review snippets a web search returns (e.g. they're in Amharic, on Telegram channels, or in reviews beyond what search indexes). Treating this as an honest data gap, not evidence these providers have no fee complaints -- the sample here is small and should not be over-interpreted."
+        },
+        {
+            "description": "M-Pesa Ethiopia and HelloCash not searched for this round",
+            "issue": "Given the low signal found even for well-covered providers, and M-Pesa Ethiopia's already-known thin public data (see fee data collection log), a search was not prioritized this round.",
+            "action": "Could be revisited if this analysis is expanded later."
+        }
+    ]
+}

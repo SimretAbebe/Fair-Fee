@@ -53,3 +53,31 @@ deleted, and a new record is added — preserving full fee history over time.
   `fee_percent` field rather than being forced into the flat-fee
   `fee_amount` field, since they represent a genuinely different pricing
   mechanism.
+
+## Complaint sentiment analysis (small sample, results are directional only)
+
+To check whether the fairness score matches real customer experience, a
+small sample of public app store reviews was searched for fee-related
+complaints across all 6 providers.
+
+**What was found:** only 2 genuine fee complaints, both from CBE and
+telebirr -- Ethiopia's two most widely used apps. Dashen, Awash, Bank of
+Abyssinia, and M-Pesa Ethiopia had no fee-specific complaints found in
+public reviews, despite substantial review volume for some of them
+(reviews found for these providers were almost entirely about app
+reliability -- crashes, login lockouts, balance sync issues -- not fees).
+
+**Honest interpretation:** this result is consistent with, but does not
+prove, the hypothesis that more regressive fee structures generate more
+complaints. Dashen and Awash (the most proportional providers, by tier
+count) got zero complaints, which fits the hypothesis. However, CBE and
+telebirr are also Ethiopia's most-used and most-reviewed apps by a wide
+margin -- so their complaints may simply reflect higher review volume in
+general, not fairness specifically. With only 2 complaints total across 6
+providers, this sample is too small to separate those two explanations.
+
+**What would be needed to say more:** a larger, systematically collected
+sample (ideally proportional to each app's actual review volume, not just
+whatever surfaced in a web search), and ideally review counts as a
+denominator to normalize for popularity before comparing complaint counts
+across providers.
