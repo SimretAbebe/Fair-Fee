@@ -81,3 +81,9 @@ sample (ideally proportional to each app's actual review volume, not just
 whatever surfaced in a web search), and ideally review counts as a
 denominator to normalize for popularity before comparing complaint counts
 across providers.
+
+### Orchestration
+The pipeline (load → transform → test) runs via Dagster
+(`orchestration/pipeline.py`), triggered manually through the Dagster UI.
+Automated monthly scheduling was scoped out for this stage, but the job
+structure supports adding a schedule later with minimal changes.
