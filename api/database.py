@@ -8,6 +8,7 @@ against the warehouse without writing raw connection-handling code.
 """
 
 import os
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
@@ -20,8 +21,13 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "fair_fee_warehouse")
 
+# URL-encode user/password before building the connection string -- if
+# either contains special characters (e.g. "@", ":", "/"), inserting them
+# raw into the URL breaks parsing, since the URL format itself uses those
+# same characters as separators. quote_plus() escapes them safely.
 DATABASE_URL = (
-    f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    f"postgresql+psycopg2://{quote_plus(DB_USER)}:{quote_plus(DB_PASSWORD)}"
+    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
 engine = create_engine(DATABASE_URL)
