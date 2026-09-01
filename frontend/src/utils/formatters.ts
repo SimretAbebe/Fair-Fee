@@ -181,3 +181,82 @@ export function getProviderBrand(name: string): ProviderBrand {
     textColor: '#334155',
   };
 }
+
+export interface FeeTierLike {
+  fee_type: string;
+  fee_amount?: number | null;
+  fee_percent?: number | null;
+  min_amount?: number | null;
+  max_amount?: number | null;
+  computed_fee?: number | null;
+}
+
+export function getPlainLanguageSummary(tier: FeeTierLike): string {
+  const feeType = (tier.fee_type || '').toLowerCase().trim();
+  const feeAmount =
+    tier.fee_amount !== undefined && tier.fee_amount !== null
+      ? tier.fee_amount
+      : tier.computed_fee !== undefined && tier.computed_fee !== null
+      ? tier.computed_fee
+      : null;
+  const feePercent =
+    tier.fee_percent !== undefined && tier.fee_percent !== null ? tier.fee_percent : null;
+  const minAmount =
+    tier.min_amount !== undefined && tier.min_amount !== null ? tier.min_amount : null;
+  const maxAmount =
+    tier.max_amount !== undefined && tier.max_amount !== null ? tier.max_amount : null;
+
+  if (feeType === 'free' || (feeAmount === 0 && feePercent === null)) {
+    return 'No fee for this transfer.';
+  }
+
+  if (feeType === 'tiered' || feeType === 'flat' || feeType === 'flat_capped') {
+    const feeStr = feeAmount !== null ? formatNumber(feeAmount) : '0';
+    if (maxAmount === null || maxAmount === undefined) {
+      const minStr = minAmount !== null ? formatNumber(minAmount) : '0';
+      return `Sending more than ${minStr} birr costs a flat ${feeStr} birr.`;
+    } else {
+      const minStr = minAmount !== null ? formatNumber(minAmount) : '1';
+      const maxStr = formatNumber(maxAmount);
+      return `Sending between ${minStr} and ${maxStr} birr costs ${feeStr} birr.`;
+    }
+  }
+
+  if (feeType === 'flat_above_threshold') {
+    const threshold = minAmount !== null ? Math.max(0, minAmount - 1) : 0;
+    const feeStr = feeAmount !== null ? formatNumber(feeAmount) : '0';
+    return `Sending more than ${formatNumber(threshold)} birr costs a flat ${feeStr} birr, no matter how much more you send.`;
+  }
+
+  if (feeType === 'flat_plus_variable') {
+    const feeStr = feeAmount !== null ? formatNumber(feeAmount) : '0';
+    return `A flat ${feeStr} birr fee, plus a possible extra bank charge that isn't fully published.`;
+  }
+
+  if (feeType === 'percent_tiered') {
+    const percentStr = feePercent !== null ? `${feePercent}` : '0';
+    if (maxAmount === null || maxAmount === undefined) {
+      const minStr = minAmount !== null ? formatNumber(minAmount) : '0';
+      return `Sending more than ${minStr} birr costs ${percentStr}% of the amount you send.`;
+    } else {
+      const minStr = minAmount !== null ? formatNumber(minAmount) : '1';
+      const maxStr = formatNumber(maxAmount);
+      return `Sending between ${minStr} and ${maxStr} birr costs ${percentStr}% of the amount you send.`;
+    }
+  }
+
+  if (feeType === 'variable_plus_percent') {
+    const percentStr = feePercent !== null ? `${feePercent}` : '0';
+    return `Costs ${percentStr}% of the amount you send, plus a base fee that isn't fully published.`;
+  }
+
+  if (feePercent !== null) {
+    return `Costs ${feePercent}% of the amount you send.`;
+  }
+
+  if (feeAmount !== null) {
+    return `Costs a flat ${formatNumber(feeAmount)} birr.`;
+  }
+
+  return 'No fee for this transfer.';
+}

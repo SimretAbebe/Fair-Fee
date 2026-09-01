@@ -20,6 +20,10 @@ export interface FeeComparisonResult {
   channel: string;
   destination_wallet: string | null;
   fee_type: string;
+  min_amount?: number | null;
+  max_amount?: number | null;
+  fee_amount?: number | null;
+  fee_percent?: number | null;
   computed_fee: number;
   fee_as_percent_of_amount: number;
   fairness_category: FairnessCategory;

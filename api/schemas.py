@@ -18,6 +18,10 @@ class FeeComparisonResult(BaseModel):
     channel: str
     destination_wallet: Optional[str] = None
     fee_type: str
+    min_amount: Optional[float] = None
+    max_amount: Optional[float] = None
+    fee_amount: Optional[float] = None
+    fee_percent: Optional[float] = None
     computed_fee: float
     fee_as_percent_of_amount: float
     fairness_category: str

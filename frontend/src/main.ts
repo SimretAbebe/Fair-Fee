@@ -14,6 +14,7 @@ import {
   formatNumber,
   formatPercent,
   getFairnessBadgeConfig,
+  getPlainLanguageSummary,
   getProviderBrand,
   getTransferTypeLabel,
 } from './utils/formatters';
@@ -44,6 +45,7 @@ interface AppState {
   directoryData: ProviderFairnessReport | null;
   directoryGroups: ProviderTierGroup[];
   expandedGroupIds: Set<string>;
+  expandedDirectoryNotesKeys: Set<string>;
   isDirectoryLoading: boolean;
 }
 
@@ -59,6 +61,7 @@ const state: AppState = {
   directoryData: null,
   directoryGroups: [],
   expandedGroupIds: new Set<string>(),
+  expandedDirectoryNotesKeys: new Set<string>(),
   isDirectoryLoading: false,
 };
 
@@ -415,6 +418,7 @@ function renderTable(data: FeeComparisonResponse, results: FeeComparisonResult[]
     const isCheapest = cheapestName ? item.provider_name.toLowerCase() === cheapestName : index === 0;
     const feeBarWidth = Math.max((item.computed_fee / maxFee) * 100, item.computed_fee === 0 ? 0 : 4);
     const isNotesOpen = state.activeNotesRowIndex === index;
+    const plainSummary = getPlainLanguageSummary(item);
 
     let barColor = '#4B5563';
     if (badge.ratingLevel === 'best') barColor = '#059669';
@@ -468,13 +472,21 @@ function renderTable(data: FeeComparisonResponse, results: FeeComparisonResult[]
         </td>
 
         <td>
+          <div class="plain-fee-summary" style="font-weight: 500; color: var(--text-primary); line-height: 1.4;">
+            ${plainSummary}
+          </div>
           ${item.notes ? `
-            <button type="button" class="notes-toggle-btn" data-toggle-index="${index}">
-              ${isNotesOpen ? 'Hide notes' : 'View notes'}
-            </button>
-          ` : `
-            <span style="font-size: 0.8125rem; color: var(--text-muted);">Standard</span>
-          `}
+            <div style="margin-top: 6px;">
+              <button type="button" class="notes-toggle-btn" data-toggle-index="${index}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                ${isNotesOpen ? 'Hide source details' : 'Source details'}
+              </button>
+            </div>
+          ` : ''}
         </td>
       </tr>
 
@@ -482,7 +494,8 @@ function renderTable(data: FeeComparisonResponse, results: FeeComparisonResult[]
         <tr class="notes-drawer ${isNotesOpen ? 'open' : ''}" id="notes-row-${index}">
           <td colspan="5">
             <div class="notes-drawer-content">
-              <strong>Published tariff note:</strong> ${item.notes}
+              <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Source details & published notes:</div>
+              <div>${item.notes}</div>
             </div>
           </td>
         </tr>
@@ -622,30 +635,24 @@ function renderDirectoryGroupCards() {
 
     const channelText = `Channel: ${group.channel.replace(/_/g, ' ')}${group.destinationWallet ? ` • Destination: ${group.destinationWallet}` : ''}`;
 
-    const tierRowsHtml = group.tiers.map((tier) => {
+    const tierRowsHtml = group.tiers.map((tier, tierIndex) => {
       const badge = getFairnessBadgeConfig(tier.fairness_category);
       const rangeText = `${formatNumber(tier.min_amount)} ETB — ${tier.max_amount !== null ? `${formatNumber(tier.max_amount)} ETB` : 'No cap'}`;
-
-      let feeRuleText = '';
-      if (tier.fee_percent !== null) {
-        feeRuleText = `${tier.fee_percent}% of amount`;
-      } else if (tier.fee_amount !== null) {
-        feeRuleText = tier.fee_amount === 0 ? 'Free (0.00 ETB)' : `${formatNumber(tier.fee_amount)} ETB flat`;
-      } else {
-        feeRuleText = tier.fee_type;
-      }
+      const plainSummary = getPlainLanguageSummary(tier);
+      const tierKey = `${group.id}__tier_${tierIndex}`;
+      const isNotesOpen = state.expandedDirectoryNotesKeys.has(tierKey);
 
       return `
         <tr>
-          <td style="font-weight: 600; color: var(--text-primary);">
+          <td style="font-weight: 600; color: var(--text-primary); white-space: nowrap;">
             ${rangeText}
           </td>
 
           <td>
-            <div style="font-weight: 600; color: ${tier.fee_amount === 0 ? '#065F46' : 'var(--text-primary)'};">
-              ${feeRuleText}
+            <div style="font-weight: 500; color: var(--text-primary); line-height: 1.4;">
+              ${plainSummary}
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
               ${tier.fee_type.replace(/_/g, ' ')}
             </div>
           </td>
@@ -657,10 +664,32 @@ function renderDirectoryGroupCards() {
             </span>
           </td>
 
-          <td style="font-size: 0.8125rem; color: var(--text-secondary); max-width: 320px;">
-            ${tier.notes || '—'}
+          <td>
+            ${tier.notes ? `
+              <button type="button" class="notes-toggle-btn dir-notes-btn" data-toggle-tier-key="${tierKey}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                ${isNotesOpen ? 'Hide details' : 'Source details'}
+              </button>
+            ` : `
+              <span style="font-size: 0.8125rem; color: var(--text-muted);">—</span>
+            `}
           </td>
         </tr>
+
+        ${tier.notes ? `
+          <tr class="notes-drawer ${isNotesOpen ? 'open' : ''}" id="dir-notes-row-${tierKey}">
+            <td colspan="4">
+              <div class="notes-drawer-content">
+                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Source details & published notes:</div>
+                <div>${tier.notes}</div>
+              </div>
+            </td>
+          </tr>
+        ` : ''}
       `;
     }).join('');
 
@@ -687,9 +716,9 @@ function renderDirectoryGroupCards() {
               <thead>
                 <tr>
                   <th>Tier range (ETB)</th>
-                  <th>Fee rule</th>
+                  <th>Fee description</th>
                   <th>Fairness rating</th>
-                  <th>Published notes</th>
+                  <th>Source details</th>
                 </tr>
               </thead>
               <tbody>
@@ -710,6 +739,21 @@ function renderDirectoryGroupCards() {
           state.expandedGroupIds.delete(groupId);
         } else {
           state.expandedGroupIds.add(groupId);
+        }
+        renderDirectoryGroupCards();
+      }
+    });
+  });
+
+  elements.directoryGroupsContainer.querySelectorAll<HTMLButtonElement>('.dir-notes-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const tierKey = btn.dataset.toggleTierKey;
+      if (tierKey) {
+        if (state.expandedDirectoryNotesKeys.has(tierKey)) {
+          state.expandedDirectoryNotesKeys.delete(tierKey);
+        } else {
+          state.expandedDirectoryNotesKeys.add(tierKey);
         }
         renderDirectoryGroupCards();
       }
