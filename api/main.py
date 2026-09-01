@@ -33,7 +33,11 @@ app = FastAPI(
 # working fine -- this isn't a bug, it's a deliberate browser safety rule.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # for local development only -- restrict this before any real deployment
+    allow_origins=[
+        "https://fair-fee.vercel.app",
+        "http://localhost:5173",  # keep local frontend dev working too
+        "http://localhost:3000",
+    ],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
