@@ -1,7 +1,13 @@
+![demo](docs/screenshots/frontend-home.PNG)
+
 # Fair Fee
 
 Compare Ethiopian mobile banking transfer fees across providers, and see
 which ones are proportional vs. regressive to small transfers.
+
+**Live demo:** https://fair-fee.vercel.app
+**API docs:** https://fair-fee-api.onrender.com/docs
+
 
 ## Example — sending 2,000 birr interbank
 
@@ -14,10 +20,6 @@ which ones are proportional vs. regressive to small transfers.
 
 Same transfer, 25x price difference — and the fairness score explains why,
 not just what it costs.
-
-## API in action
-
-![Fair Fee API docs](docs/screenshots/projectimg1.PNG)
 
 ## Stack
 
@@ -32,7 +34,7 @@ Official sources → raw JSON → Postgres → dbt staging → star schema
 
 Full methodology and known data gaps: [`docs/methodology.md`](docs/methodology.md)
 
-## Setup
+## Setup (for local development)
 
 ```bash
 # 1. Create a Postgres database, set credentials in .env (see .env.example)
@@ -51,9 +53,13 @@ Docs at `http://localhost:8000/docs`.
 
 ## Endpoints
 
+Live: `https://fair-fee-api.onrender.com`
+Local: `http://localhost:8000`
+
 - `GET /api/fees/compare?amount=2000&transfer_type=interbank_mobile`
 - `GET /api/fees/cheapest?amount=2000&transfer_type=interbank_mobile`
 - `GET /api/providers/cbe/fairness`
+- `GET /api/providers/cbe/complaints`
 
 Transfer types: `own_bank_mobile`, `interbank_mobile`, `to_wallet_mobile`,
 `p2p_wallet`, `to_bank`, `own_account_mobile`
@@ -62,3 +68,11 @@ Transfer types: `own_bank_mobile`, `interbank_mobile`, `to_wallet_mobile`,
 
 CBE, telebirr, Dashen, Awash, and Bank of Abyssinia — official tariff
 pages/PDFs. M-Pesa Ethiopia — mixed confidence, flagged in the data.
+
+## Beyond the core comparison
+
+- **Complaint sentiment analysis** — real fee complaints from public app
+  reviews, correlated against fairness scores. Small sample, honest
+  limitations documented in `docs/methodology.md`.
+- **Orchestrated pipeline** — the full load → transform → test sequence
+  runs as a single Dagster job (`orchestration/pipeline.py`).
